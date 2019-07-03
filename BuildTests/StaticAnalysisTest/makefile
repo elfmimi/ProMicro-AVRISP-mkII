@@ -1,26 +1,27 @@
 #
 #             LUFA Library
-#     Copyright (C) Dean Camera, 2017.
+#     Copyright (C) Dean Camera, 2019.
 #
 #  dean [at] fourwalledcubicle [dot] com
 #           www.lufa-lib.org
 #
 
-# Static anlysis of the entire LUFA source tree, using the free cross-platform "cppcheck" tool.
+# Static analysis of the entire LUFA source tree, using the free cross-platform "cppcheck" tool.
 
 # Path to the LUFA library core
 LUFA_PATH := ../../LUFA/
 
 CPPCHECK_EXCLUDES := FATFs/            \
                      PetiteFATFs/      \
-                     uip/
+                     uip/              \
+                     HID/HostLoaderApp/
 
 CPPCHECK_INCLUDES := $(patsubst %/,%,$(LUFA_PATH))/CodeTemplates/               \
                      $(patsubst %/,%,$(LUFA_PATH))/../Projects/AVRISP-MKII/
 
 CPPCHECK_FLAGS    := -U TEMPLATE_FUNC_NAME -U __GNUC__ -U __DOXYGEN__
 
-CPPCHECK_SUPPRESS := variableScope missingInclude unusedFunction
+CPPCHECK_SUPPRESS := variableScope missingInclude noValidConfiguration unusedFunction knownConditionTrueFalse ConfigurationNotChecked
 
 SRC               := $(patsubst %/,%,$(LUFA_PATH))/..
 

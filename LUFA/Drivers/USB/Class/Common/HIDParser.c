@@ -1,13 +1,13 @@
 /*
              LUFA Library
-     Copyright (C) Dean Camera, 2017.
+     Copyright (C) Dean Camera, 2019.
 
   dean [at] fourwalledcubicle [dot] com
            www.lufa-lib.org
 */
 
 /*
-  Copyright 2017  Dean Camera (dean [at] fourwalledcubicle [dot] com)
+  Copyright 2019  Dean Camera (dean [at] fourwalledcubicle [dot] com)
 
   Permission to use, copy, modify, distribute, and sell this
   software and its documentation for any purpose is hereby granted
@@ -92,7 +92,7 @@ uint8_t USB_ProcessHIDReport(const uint8_t* ReportData,
 
 				memcpy((CurrStateTable + 1),
 				       CurrStateTable,
-				       sizeof(HID_ReportItem_t));
+				       sizeof(HID_StateTable_t));
 
 				CurrStateTable++;
 				break;
@@ -105,9 +105,6 @@ uint8_t USB_ProcessHIDReport(const uint8_t* ReportData,
 				break;
 
 			case HID_RI_USAGE_PAGE(0):
-				if ((HIDReportItem & HID_RI_DATA_SIZE_MASK) == HID_RI_DATA_BITS_32)
-				  CurrStateTable->Attributes.Usage.Page = (ReportItemData >> 16);
-
 				CurrStateTable->Attributes.Usage.Page       = ReportItemData;
 				break;
 
@@ -177,6 +174,9 @@ uint8_t USB_ProcessHIDReport(const uint8_t* ReportData,
 			case HID_RI_USAGE(0):
 				if (UsageListSize == HID_USAGE_STACK_DEPTH)
 				  return HID_PARSE_UsageListOverflow;
+
+				if ((HIDReportItem & HID_RI_DATA_SIZE_MASK) == HID_RI_DATA_BITS_32)
+				  CurrStateTable->Attributes.Usage.Page = (ReportItemData >> 16);
 
 				UsageList[UsageListSize++] = ReportItemData;
 				break;

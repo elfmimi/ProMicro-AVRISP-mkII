@@ -1,6 +1,6 @@
 #
 #             LUFA Library
-#     Copyright (C) Dean Camera, 2017.
+#     Copyright (C) Dean Camera, 2019.
 #
 #  dean [at] fourwalledcubicle [dot] com
 #           www.lufa-lib.org
@@ -21,9 +21,10 @@ F_USB        = $(F_CPU)
 OPTIMIZATION = s
 TARGET       = XPLAINBridge
 SRC          = $(TARGET).c Lib/SoftUART.c USARTDescriptors.c $(AVRISP_PATH)/AVRISPDescriptors.c $(AVRISP_PATH)/Lib/V2Protocol.c \
-               $(AVRISP_PATH)/Lib/V2ProtocolParams.c $(AVRISP_PATH)/Lib/ISP/ISPProtocol.c $(AVRISP_PATH)/Lib/ISP/ISPTarget.c \
-               $(AVRISP_PATH)/Lib/XPROG/XPROGProtocol.c $(AVRISP_PATH)/Lib/XPROG/XPROGTarget.c $(AVRISP_PATH)/Lib/XPROG/XMEGANVM.c \
-               $(AVRISP_PATH)/Lib/XPROG/TINYNVM.c $(LUFA_SRC_USB) $(LUFA_SRC_USBCLASS)
+               $(AVRISP_PATH)/Lib/V2ProtocolParams.c \
+               $(AVRISP_PATH)/Lib/XPROG/XPROGProtocol.c $(AVRISP_PATH)/Lib/XPROG/XPROGTarget.c \
+               $(AVRISP_PATH)/Lib/XPROG/XMEGANVM.c $(AVRISP_PATH)/Lib/XPROG/TINYNVM.c \
+               $(LUFA_SRC_USB) $(LUFA_SRC_USBCLASS)
 LUFA_PATH    = ../../LUFA
 CC_FLAGS     = -DUSE_LUFA_CONFIG_HEADER -IConfig/ -I$(AVRISP_PATH)
 LD_FLAGS     =
@@ -35,7 +36,7 @@ all:
 # identical OBJDIR directory, we need to enforce the use of this project's object file
 # directory as the one where the build object files are to be stored, by giving it a
 # path relative to the current folder.
-OBJDIR      := ./obj
+OBJDIR      := ./xpb-obj
 
 # Include LUFA-specific DMBS extension modules
 DMBS_LUFA_PATH ?= $(LUFA_PATH)/Build/LUFA

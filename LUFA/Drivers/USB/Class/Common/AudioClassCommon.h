@@ -1,13 +1,13 @@
 /*
              LUFA Library
-     Copyright (C) Dean Camera, 2017.
+     Copyright (C) Dean Camera, 2019.
 
   dean [at] fourwalledcubicle [dot] com
            www.lufa-lib.org
 */
 
 /*
-  Copyright 2017  Dean Camera (dean [at] fourwalledcubicle [dot] com)
+  Copyright 2019  Dean Camera (dean [at] fourwalledcubicle [dot] com)
 
   Permission to use, copy, modify, distribute, and sell this
   software and its documentation for any purpose is hereby granted
@@ -243,6 +243,13 @@
 			AUDIO_CSCP_StreamingProtocol              = 0x00, /**< Descriptor Protocol value indicating that the device or
 			                                                   *   interface belongs to the Streaming Audio protocol.
 			                                                   */
+		};
+
+		/** Enum for the Audio class specific descriptor types. */
+		enum AUDIO_DescriptorTypes_t
+		{
+			AUDIO_DTYPE_CSInterface                     = 0x24, /**< Audio class specific Interface functional descriptor. */
+			AUDIO_DTYPE_CSEndpoint                      = 0x25, /**< Audio class specific Endpoint functional descriptor. */
 		};
 
 		/** Audio class specific interface description subtypes, for the Audio Control interface. */

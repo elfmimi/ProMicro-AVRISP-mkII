@@ -1,13 +1,13 @@
 /*
              LUFA Library
-     Copyright (C) Dean Camera, 2017.
+     Copyright (C) Dean Camera, 2019.
 
   dean [at] fourwalledcubicle [dot] com
            www.lufa-lib.org
 */
 
 /*
-  Copyright 2017  Dean Camera (dean [at] fourwalledcubicle [dot] com)
+  Copyright 2019  Dean Camera (dean [at] fourwalledcubicle [dot] com)
 
   Permission to use, copy, modify, distribute, and sell this
   software and its documentation for any purpose is hereby granted
@@ -35,18 +35,44 @@
 
 #include "BootloaderAPI.h"
 
+bool IsPageAddressValid(const uint32_t Address)
+{
+	/* Determine if the given page address is correctly aligned to the
+	   start of a flash page.
+
+	   Note that this is not static, as we need to force it into the
+	   AUX_BOOT_SECTION on small flash devices to save space.
+	*/
+
+	bool PageAddressIsAligned = !(Address & (SPM_PAGESIZE - 1));
+
+	return (Address < BOOT_START_ADDR) && PageAddressIsAligned;
+}
+
 void BootloaderAPI_ErasePage(const uint32_t Address)
 {
-	boot_page_erase_safe(Address);
-	boot_spm_busy_wait();
-	boot_rww_enable();
+	if (! IsPageAddressValid(Address))
+		return;
+
+	ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+	{
+		boot_page_erase_safe(Address);
+		boot_spm_busy_wait();
+		boot_rww_enable();
+	}
 }
 
 void BootloaderAPI_WritePage(const uint32_t Address)
 {
-	boot_page_write_safe(Address);
-	boot_spm_busy_wait();
-	boot_rww_enable();
+	if (! IsPageAddressValid(Address))
+		return;
+
+	ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+	{
+		boot_page_write_safe(Address);
+		boot_spm_busy_wait();
+		boot_rww_enable();
+	}
 }
 
 void BootloaderAPI_FillWord(const uint32_t Address, const uint16_t Word)
@@ -71,6 +97,8 @@ uint8_t BootloaderAPI_ReadLock(void)
 
 void BootloaderAPI_WriteLock(const uint8_t LockBits)
 {
-	boot_lock_bits_set_safe(LockBits);
+	ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+	{
+		boot_lock_bits_set_safe(LockBits);
+	}
 }
-

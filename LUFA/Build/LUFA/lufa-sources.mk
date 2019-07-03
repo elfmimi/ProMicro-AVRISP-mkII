@@ -6,6 +6,9 @@
 #           www.lufa-lib.org
 #
 
+# Include Guard
+ifeq ($(filter LUFA_SOURCES, $(DMBS_BUILD_MODULES)),)
+
 DMBS_BUILD_MODULES         += LUFA_SOURCES
 DMBS_BUILD_TARGETS         +=
 DMBS_BUILD_MANDATORY_VARS  += LUFA_PATH ARCH
@@ -52,6 +55,7 @@ LUFA_SRC_USB_DEVICE      := $(LUFA_ROOT_PATH)/Drivers/USB/Core/$(ARCH)/Device_$(
                             $(LUFA_SRC_USB_COMMON)
 
 LUFA_SRC_USBCLASS_DEVICE := $(LUFA_ROOT_PATH)/Drivers/USB/Class/Device/AudioClassDevice.c        \
+                            $(LUFA_ROOT_PATH)/Drivers/USB/Class/Device/CCIDClassDevice.c         \
                             $(LUFA_ROOT_PATH)/Drivers/USB/Class/Device/CDCClassDevice.c          \
                             $(LUFA_ROOT_PATH)/Drivers/USB/Class/Device/HIDClassDevice.c          \
                             $(LUFA_ROOT_PATH)/Drivers/USB/Class/Device/MassStorageClassDevice.c  \
@@ -93,3 +97,5 @@ LUFA_SRC_ALL_FILES   := $(LUFA_SRC_USB)            \
                         $(LUFA_SRC_SERIAL)         \
                         $(LUFA_SRC_TWI)            \
                         $(LUFA_SRC_PLATFORM)
+
+endif
