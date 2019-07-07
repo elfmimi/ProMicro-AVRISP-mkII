@@ -1,13 +1,13 @@
 /*
              LUFA Library
-     Copyright (C) Dean Camera, 2017.
+     Copyright (C) Dean Camera, 2019.
 
   dean [at] fourwalledcubicle [dot] com
            www.lufa-lib.org
 */
 
 /*
-  Copyright 2017  Dean Camera (dean [at] fourwalledcubicle [dot] com)
+  Copyright 2019  Dean Camera (dean [at] fourwalledcubicle [dot] com)
 
   Permission to use, copy, modify, distribute, and sell this
   software and its documentation for any purpose is hereby granted
@@ -114,7 +114,7 @@ void Application_Jump_Check(void)
 		JTAG_ENABLE();
 	#else
 		/* Check if the device's BOOTRST fuse is set */
-		if (boot_lock_fuse_bits_get(GET_HIGH_FUSE_BITS) & FUSE_BOOTRST)
+		if (!(BootloaderAPI_ReadFuse(GET_HIGH_FUSE_BITS) & ~FUSE_BOOTRST))
 		{
 			/* If the reset source was not an external reset or the key is correct, clear it and jump to the application */
 			if (!(MCUSR & (1 << EXTRF)) || (MagicBootKey == MAGIC_BOOT_KEY))
@@ -168,6 +168,9 @@ int main(void)
 		MS_Device_USBTask(&Disk_MS_Interface);
 		USB_USBTask();
 	}
+
+	/* Wait a short time to end all USB transactions and then disconnect */
+	_delay_us(1000);
 
 	/* Disconnect from the host - USB interface will be reset later along with the AVR */
 	USB_Detach();

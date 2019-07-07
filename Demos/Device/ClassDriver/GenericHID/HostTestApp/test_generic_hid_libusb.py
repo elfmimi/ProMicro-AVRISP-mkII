@@ -2,7 +2,7 @@
 
 """
              LUFA Library
-     Copyright (C) Dean Camera, 2017.
+     Copyright (C) Dean Camera, 2019.
 
   dean [at] fourwalledcubicle [dot] com
            www.lufa-lib.org
@@ -14,7 +14,7 @@
     pattern on the target board. Send and received report data is printed to
     the terminal.
 
-    Requires the PyUSB library (http://sourceforge.net/apps/trac/pyusb/).
+    Requires PyUSB >= 1.0.0 (https://github.com/pyusb/pyusb).
 """
 
 import sys
@@ -22,13 +22,9 @@ from time import sleep
 import usb.core
 import usb.util
 
-# Generic HID device VID, PID and report payload length (length is increased
-# by one to account for the Report ID byte that must be pre-pended)
-device_vid = 0x03EB
-device_pid = 0x204F
 
 def get_and_init_hid_device():
-    device = usb.core.find(idVendor=device_vid, idProduct=device_pid)
+    device = usb.core.find(idVendor=0x03EB, idProduct=0x204F)
 
     if device is None:
         sys.exit("Could not find USB device.")
@@ -46,6 +42,7 @@ def get_and_init_hid_device():
 
     return device
 
+
 def send_led_pattern(device, led1, led2, led3, led4):
     # Report data for the demo is LED on/off data
     report_data = [led1, led2, led3, led4]
@@ -62,18 +59,20 @@ def send_led_pattern(device, led1, led2, led3, led4):
 
     print("Sent LED Pattern: {0}".format(report_data))
 
+
 def receive_led_pattern(hid_device):
     endpoint = hid_device[0][(0,0)][0]
     report_data = hid_device.read(endpoint.bEndpointAddress, endpoint.wMaxPacketSize)
     return list(report_data)
+
 
 def main():
     hid_device = get_and_init_hid_device()
 
     print("Connected to device 0x%04X/0x%04X - %s [%s]" %
           (hid_device.idVendor, hid_device.idProduct,
-           usb.util.get_string(hid_device, 256, hid_device.iProduct),
-           usb.util.get_string(hid_device, 256, hid_device.iManufacturer)))
+           usb.util.get_string(hid_device, hid_device.iProduct),
+           usb.util.get_string(hid_device, hid_device.iManufacturer)))
 
     p = 0
     while (True):

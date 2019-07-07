@@ -1,13 +1,13 @@
 /*
              LUFA Library
-     Copyright (C) Dean Camera, 2017.
+     Copyright (C) Dean Camera, 2019.
 
   dean [at] fourwalledcubicle [dot] com
            www.lufa-lib.org
 */
 
 /*
-  Copyright 2017  Dean Camera (dean [at] fourwalledcubicle [dot] com)
+  Copyright 2019  Dean Camera (dean [at] fourwalledcubicle [dot] com)
 
   Permission to use, copy, modify, distribute, and sell this
   software and its documentation for any purpose is hereby granted
@@ -84,6 +84,9 @@ int main(void)
 	while (RunBootloader)
 	  USB_USBTask();
 
+	/* Wait a short time to end all USB transactions and then disconnect */
+	_delay_us(1000);
+
 	/* Disconnect from the host - USB interface will be reset later along with the AVR */
 	USB_Detach();
 
@@ -152,6 +155,10 @@ void EVENT_USB_Device_ControlRequest(void)
 			uint16_t PageAddress = Endpoint_Read_16_LE();
 			#endif
 
+			/* Determine if the given page address is correctly aligned to the
+			   start of a flash page. */
+			bool PageAddressIsAligned = !(PageAddress & (SPM_PAGESIZE - 1));
+
 			/* Check if the command is a program page command, or a start application command */
 			#if (FLASHEND > 0xFFFF)
 			if ((uint16_t)(PageAddress >> 8) == COMMAND_STARTAPPLICATION)
@@ -161,11 +168,14 @@ void EVENT_USB_Device_ControlRequest(void)
 			{
 				RunBootloader = false;
 			}
-			else if (PageAddress < BOOT_START_ADDR)
+			else if ((PageAddress < BOOT_START_ADDR) && PageAddressIsAligned)
 			{
 				/* Erase the given FLASH page, ready to be programmed */
-				boot_page_erase(PageAddress);
-				boot_spm_busy_wait();
+				ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+				{
+					boot_page_erase(PageAddress);
+					boot_spm_busy_wait();
+				}
 
 				/* Write each of the FLASH page's bytes in sequence */
 				for (uint8_t PageWord = 0; PageWord < (SPM_PAGESIZE / 2); PageWord++)
@@ -182,8 +192,11 @@ void EVENT_USB_Device_ControlRequest(void)
 				}
 
 				/* Write the filled FLASH page to memory */
-				boot_page_write(PageAddress);
-				boot_spm_busy_wait();
+				ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+				{
+					boot_page_write(PageAddress);
+					boot_spm_busy_wait();
+				}
 
 				/* Re-enable RWW section */
 				boot_rww_enable();

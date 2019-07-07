@@ -1,13 +1,13 @@
 /*
              LUFA Library
-     Copyright (C) Dean Camera, 2017.
+     Copyright (C) Dean Camera, 2019.
 
   dean [at] fourwalledcubicle [dot] com
            www.lufa-lib.org
 */
 
 /*
-  Copyright 2017  Dean Camera (dean [at] fourwalledcubicle [dot] com)
+  Copyright 2019  Dean Camera (dean [at] fourwalledcubicle [dot] com)
 
   Permission to use, copy, modify, distribute, and sell this
   software and its documentation for any purpose is hereby granted
@@ -67,7 +67,7 @@ USB_ClassInfo_PRNT_Device_t TextOnly_Printer_Interface =
 /** Intel HEX parser state machine state information, to track the contents of
  *  a HEX file streamed in as a sequence of arbitrary bytes.
  */
-struct
+static struct
 {
 	/** Current HEX parser state machine state. */
 	uint8_t  ParserState;
@@ -87,11 +87,11 @@ struct
 	/** Checksum of the current record received so far. */
 	uint8_t  Checksum;
 	/** Starting address of the last addressed FLASH page. */
-	uint32_t PageStartAddress;
+	flashaddr_t PageStartAddress;
 	/** Current 32-bit byte extended base address in FLASH being targeted. */
-	uint32_t CurrBaseAddress;
+	flashaddr_t CurrBaseAddress;
 	/** Current 32-bit byte address in FLASH being targeted. */
-	uint32_t CurrAddress;
+	flashaddr_t CurrAddress;
 } HEXParser;
 
 /** Indicates if there is data waiting to be written to a physical page of
@@ -146,7 +146,7 @@ void Application_Jump_Check(void)
 		JTAG_ENABLE();
 	#else
 		/* Check if the device's BOOTRST fuse is set */
-		if (boot_lock_fuse_bits_get(GET_HIGH_FUSE_BITS) & FUSE_BOOTRST)
+		if (!(BootloaderAPI_ReadFuse(GET_HIGH_FUSE_BITS) & ~FUSE_BOOTRST))
 		{
 			/* If the reset source was not an external reset or the key is correct, clear it and jump to the application */
 			if (!(MCUSR & (1 << EXTRF)) || (MagicBootKey == MAGIC_BOOT_KEY))
@@ -221,8 +221,7 @@ static void FlushPageIfRequired(void)
 	uint32_t NewPageStartAddress = (HEXParser.CurrAddress & ~(SPM_PAGESIZE - 1));
 	if (HEXParser.PageStartAddress != NewPageStartAddress)
 	{
-		boot_page_write(HEXParser.PageStartAddress);
-		boot_spm_busy_wait();
+		BootloaderAPI_WritePage(HEXParser.PageStartAddress);
 
 		HEXParser.PageStartAddress = NewPageStartAddress;
 
@@ -321,14 +320,13 @@ static void ParseIntelHEXByte(const char ReadCharacter)
 					/* If we are writing to a new page, we need to erase it first */
 					if (!(PageDirty))
 					{
-						boot_page_erase(HEXParser.PageStartAddress);
-						boot_spm_busy_wait();
+						BootloaderAPI_ErasePage(HEXParser.PageStartAddress);
 
 						PageDirty = true;
 					}
 
 					/* Fill the FLASH memory buffer with the new word of data */
-					boot_page_fill(HEXParser.CurrAddress, NewDataWord);
+					BootloaderAPI_FillWord(HEXParser.CurrAddress, NewDataWord);
 					HEXParser.CurrAddress += 2;
 
 					/* Flush the FLASH page to physical memory if we are crossing a page boundary */
@@ -402,6 +400,9 @@ int main(void)
 		PRNT_Device_USBTask(&TextOnly_Printer_Interface);
 		USB_USBTask();
 	}
+
+	/* Wait a short time to end all USB transactions and then disconnect */
+	_delay_us(1000);
 
 	/* Disconnect from the host - USB interface will be reset later along with the AVR */
 	USB_Detach();

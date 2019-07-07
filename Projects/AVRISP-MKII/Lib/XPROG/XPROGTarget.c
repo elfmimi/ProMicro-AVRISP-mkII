@@ -1,13 +1,13 @@
 /*
              LUFA Library
-     Copyright (C) Dean Camera, 2017.
+     Copyright (C) Dean Camera, 2019.
 
   dean [at] fourwalledcubicle [dot] com
            www.lufa-lib.org
 */
 
 /*
-  Copyright 2017  Dean Camera (dean [at] fourwalledcubicle [dot] com)
+  Copyright 2019  Dean Camera (dean [at] fourwalledcubicle [dot] com)
 
   Permission to use, copy, modify, distribute, and sell this
   software and its documentation for any purpose is hereby granted
@@ -39,7 +39,7 @@
 #if defined(ENABLE_XPROG_PROTOCOL) || defined(__DOXYGEN__)
 
 /** Flag to indicate if the USART is currently in Tx or Rx mode. */
-bool IsSending;
+static bool IsSending;
 
 /** Enables the target's PDI interface, holding the target in reset until PDI mode is exited. */
 void XPROGTarget_EnableTargetPDI(void)
@@ -50,9 +50,14 @@ void XPROGTarget_EnableTargetPDI(void)
 	DDRD |=  (1 << 5) | (1 << 3);
 	DDRD &= ~(1 << 2);
 
-	/* Set DATA line high for at least 90ns to disable /RESET functionality */
-	PORTD |= (1 << 3);
+	/* Set Tx (PDI CLOCK) high, DATA line low for at least 90ns to disable /RESET functionality */
+	PORTD |=  (1 << 5);
+	PORTD &= ~(1 << 3);
 	_delay_us(100);
+
+	/* Set DATA line high (enables PDI interface after 16 PDI CLK cycles) */
+	PORTD |= (1 << 3);
+	_delay_us(20);
 
 	/* Set up the synchronous USART for XMEGA communications - 8 data bits, even parity, 2 stop bits */
 	UBRR1  = ((F_CPU / 2 / XPROG_HARDWARE_SPEED) - 1);

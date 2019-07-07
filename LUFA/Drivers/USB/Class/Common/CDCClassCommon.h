@@ -1,13 +1,13 @@
 /*
              LUFA Library
-     Copyright (C) Dean Camera, 2017.
+     Copyright (C) Dean Camera, 2019.
 
   dean [at] fourwalledcubicle [dot] com
            www.lufa-lib.org
 */
 
 /*
-  Copyright 2017  Dean Camera (dean [at] fourwalledcubicle [dot] com)
+  Copyright 2019  Dean Camera (dean [at] fourwalledcubicle [dot] com)
 
   Permission to use, copy, modify, distribute, and sell this
   software and its documentation for any purpose is hereby granted
@@ -112,21 +112,6 @@
 		#define CDC_CONTROL_LINE_IN_OVERRUNERROR (1 << 6)
 		//@}
 
-		/** Macro to define a CDC class-specific functional descriptor. CDC functional descriptors have a
-		 *  uniform structure but variable sized data payloads, thus cannot be represented accurately by
-		 *  a single \c typedef \c struct. A macro is used instead so that functional descriptors can be created
-		 *  easily by specifying the size of the payload. This allows \c sizeof() to work correctly.
-		 *
-		 *  \param[in] DataSize  Size in bytes of the CDC functional descriptor's data payload.
-		 */
-		#define CDC_FUNCTIONAL_DESCRIPTOR(DataSize)        \
-		     struct                                        \
-		     {                                             \
-		          USB_Descriptor_Header_t Header;          \
-			      uint8_t                 SubType;         \
-		          uint8_t                 Data[DataSize];  \
-		     }
-
 	/* Enums: */
 		/** Enum for possible Class, Subclass and Protocol values of device and interface descriptors relating to the CDC
 		 *  device class.
@@ -183,26 +168,33 @@
 			                               */
 		};
 
+		/** Enum for the CDC class specific descriptor types. */
+		enum CDC_DescriptorTypes_t
+		{
+			CDC_DTYPE_CSInterface                     = 0x24, /**< CDC class specific Interface functional descriptor. */
+			CDC_DTYPE_CSEndpoint                      = 0x25, /**< CDC class specific Endpoint functional descriptor. */
+		};
+
 		/** Enum for the CDC class specific interface descriptor subtypes. */
 		enum CDC_DescriptorSubtypes_t
 		{
-			CDC_DSUBTYPE_CSInterface_Header           = 0x00, /**< CDC class-specific Header functional descriptor. */
-			CDC_DSUBTYPE_CSInterface_CallManagement   = 0x01, /**< CDC class-specific Call Management functional descriptor. */
-			CDC_DSUBTYPE_CSInterface_ACM              = 0x02, /**< CDC class-specific Abstract Control Model functional descriptor. */
-			CDC_DSUBTYPE_CSInterface_DirectLine       = 0x03, /**< CDC class-specific Direct Line functional descriptor. */
-			CDC_DSUBTYPE_CSInterface_TelephoneRinger  = 0x04, /**< CDC class-specific Telephone Ringer functional descriptor. */
-			CDC_DSUBTYPE_CSInterface_TelephoneCall    = 0x05, /**< CDC class-specific Telephone Call functional descriptor. */
-			CDC_DSUBTYPE_CSInterface_Union            = 0x06, /**< CDC class-specific Union functional descriptor. */
-			CDC_DSUBTYPE_CSInterface_CountrySelection = 0x07, /**< CDC class-specific Country Selection functional descriptor. */
-			CDC_DSUBTYPE_CSInterface_TelephoneOpModes = 0x08, /**< CDC class-specific Telephone Operation Modes functional descriptor. */
-			CDC_DSUBTYPE_CSInterface_USBTerminal      = 0x09, /**< CDC class-specific USB Terminal functional descriptor. */
-			CDC_DSUBTYPE_CSInterface_NetworkChannel   = 0x0A, /**< CDC class-specific Network Channel functional descriptor. */
-			CDC_DSUBTYPE_CSInterface_ProtocolUnit     = 0x0B, /**< CDC class-specific Protocol Unit functional descriptor. */
-			CDC_DSUBTYPE_CSInterface_ExtensionUnit    = 0x0C, /**< CDC class-specific Extension Unit functional descriptor. */
-			CDC_DSUBTYPE_CSInterface_MultiChannel     = 0x0D, /**< CDC class-specific Multi-Channel Management functional descriptor. */
-			CDC_DSUBTYPE_CSInterface_CAPI             = 0x0E, /**< CDC class-specific Common ISDN API functional descriptor. */
-			CDC_DSUBTYPE_CSInterface_Ethernet         = 0x0F, /**< CDC class-specific Ethernet functional descriptor. */
-			CDC_DSUBTYPE_CSInterface_ATM              = 0x10, /**< CDC class-specific Asynchronous Transfer Mode functional descriptor. */
+			CDC_DSUBTYPE_CSInterface_Header           = 0x00, /**< CDC class specific Header functional descriptor. */
+			CDC_DSUBTYPE_CSInterface_CallManagement   = 0x01, /**< CDC class specific Call Management functional descriptor. */
+			CDC_DSUBTYPE_CSInterface_ACM              = 0x02, /**< CDC class specific Abstract Control Model functional descriptor. */
+			CDC_DSUBTYPE_CSInterface_DirectLine       = 0x03, /**< CDC class specific Direct Line functional descriptor. */
+			CDC_DSUBTYPE_CSInterface_TelephoneRinger  = 0x04, /**< CDC class specific Telephone Ringer functional descriptor. */
+			CDC_DSUBTYPE_CSInterface_TelephoneCall    = 0x05, /**< CDC class specific Telephone Call functional descriptor. */
+			CDC_DSUBTYPE_CSInterface_Union            = 0x06, /**< CDC class specific Union functional descriptor. */
+			CDC_DSUBTYPE_CSInterface_CountrySelection = 0x07, /**< CDC class specific Country Selection functional descriptor. */
+			CDC_DSUBTYPE_CSInterface_TelephoneOpModes = 0x08, /**< CDC class specific Telephone Operation Modes functional descriptor. */
+			CDC_DSUBTYPE_CSInterface_USBTerminal      = 0x09, /**< CDC class specific USB Terminal functional descriptor. */
+			CDC_DSUBTYPE_CSInterface_NetworkChannel   = 0x0A, /**< CDC class specific Network Channel functional descriptor. */
+			CDC_DSUBTYPE_CSInterface_ProtocolUnit     = 0x0B, /**< CDC class specific Protocol Unit functional descriptor. */
+			CDC_DSUBTYPE_CSInterface_ExtensionUnit    = 0x0C, /**< CDC class specific Extension Unit functional descriptor. */
+			CDC_DSUBTYPE_CSInterface_MultiChannel     = 0x0D, /**< CDC class specific Multi-Channel Management functional descriptor. */
+			CDC_DSUBTYPE_CSInterface_CAPI             = 0x0E, /**< CDC class specific Common ISDN API functional descriptor. */
+			CDC_DSUBTYPE_CSInterface_Ethernet         = 0x0F, /**< CDC class specific Ethernet functional descriptor. */
+			CDC_DSUBTYPE_CSInterface_ATM              = 0x10, /**< CDC class specific Asynchronous Transfer Mode functional descriptor. */
 		};
 
 		/** Enum for the possible line encoding formats of a virtual serial port. */

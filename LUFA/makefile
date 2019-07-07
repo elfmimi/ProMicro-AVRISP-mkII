@@ -1,6 +1,6 @@
 #
 #             LUFA Library
-#     Copyright (C) Dean Camera, 2017.
+#     Copyright (C) Dean Camera, 2019.
 #
 #  dean [at] fourwalledcubicle [dot] com
 #           www.lufa-lib.org
@@ -9,7 +9,7 @@
 #  Makefile for the LUFA library itself.
 # ---------------------------------------
 
-LUFA_VERSION_NUM := $(shell grep LUFA_VERSION_STRING $(LUFA_PATH)/Version.h | cut -d'"' -f2)
+LUFA_VERSION_NUM := $(shell grep LUFA_VERSION_STRING Version.h | cut -d'"' -f2)
 
 # Default target - no default action when attempting to build the core directly
 all:
