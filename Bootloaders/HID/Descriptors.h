@@ -62,7 +62,16 @@
 		{
 			INTERFACE_ID_GenericHID = 0, /**< GenericHID interface descriptor ID */
 		};
-
+		/** Enum for the device string descriptor IDs within the device. Each string descriptor should
+		 *  have a unique ID index associated with it, which can be used to refer to the string from
+		 *  other descriptors.
+		 */
+		enum StringDescriptors_t
+		{
+			STRING_ID_Language     = 0, /**< Supported Languages string descriptor ID (must be zero) */
+			STRING_ID_Manufacturer = 1, /**< Manufacturer string ID */
+			STRING_ID_Product      = 2, /**< Product string ID */
+		};
 	/* Macros: */
 		/** Endpoint address of the HID data IN endpoint. */
 		#define HID_IN_EPADDR                (ENDPOINT_DIR_IN | 1)
@@ -76,5 +85,11 @@
 		                                    const void** const DescriptorAddress)
 		                                    ATTR_WARN_UNUSED_RESULT ATTR_NON_NULL_PTR_ARG(3);
 
-#endif
+		// convert to L string
+		#define LSTR(s) XLSTR(s)
+		#define XLSTR(s) L ## #s
+		// convert to string
+		#define STR(s) XSTR(s)
+		#define XSTR(s) #s
 
+#endif

@@ -36,6 +36,14 @@
  */
 
 #include "Descriptors.h"
+#include "Keyboard.h"
+
+ #ifndef MANUFACTURER
+    #define MANUFACTURER QMK
+#endif
+#ifndef PRODUCT
+    #define PRODUCT Keyboard
+#endif
 
 /** HID class report descriptor. This is a special descriptor constructed with values from the
  *  USBIF HID class specification to describe the reports and capabilities of the HID device. This
@@ -77,8 +85,8 @@ const USB_Descriptor_Device_t DeviceDescriptor =
 	.ProductID              = 0x2067,
 	.ReleaseNumber          = VERSION_BCD(0,0,1),
 
-	.ManufacturerStrIndex   = NO_DESCRIPTOR,
-	.ProductStrIndex        = NO_DESCRIPTOR,
+	.ManufacturerStrIndex   = STRING_ID_Manufacturer,
+	.ProductStrIndex        = STRING_ID_Product,
 	.SerialNumStrIndex      = NO_DESCRIPTOR,
 
 	.NumberOfConfigurations = FIXED_NUM_CONFIGURATIONS
@@ -144,6 +152,24 @@ const USB_Descriptor_Configuration_t ConfigurationDescriptor =
 		},
 };
 
+/** Language descriptor structure. This descriptor, located in SRAM memory, is returned when the host requests
+ *  the string descriptor with index 0 (the first index). It is actually an array of 16-bit integers, which indicate
+ *  via the language ID table available at USB.org what languages the device supports for its string descriptors.
+ */
+const USB_Descriptor_String_t LanguageString = USB_STRING_DESCRIPTOR_ARRAY(LANGUAGE_ID_ENG);
+
+/** Manufacturer descriptor string. This is a Unicode string containing the manufacturer's details in human readable
+ *  form, and is read out upon request by the host when the appropriate string ID is requested, listed in the Device
+ *  Descriptor.
+ */
+const USB_Descriptor_String_t ManufacturerString = USB_STRING_DESCRIPTOR(LSTR(MANUFACTURER));
+
+/** Product descriptor string. This is a Unicode string containing the product's details in human readable form,
+ *  and is read out upon request by the host when the appropriate string ID is requested, listed in the Device
+ *  Descriptor.
+ */
+const USB_Descriptor_String_t ProductString = USB_STRING_DESCRIPTOR(LSTR(PRODUCT));
+
 /** This function is called by the library when in device mode, and must be overridden (see library "USB Descriptors"
  *  documentation) by the application code so that the address and size of a requested descriptor can be given
  *  to the USB library. When the device receives a Get Descriptor request on the control endpoint, this function
@@ -155,6 +181,7 @@ uint16_t CALLBACK_USB_GetDescriptor(const uint16_t wValue,
                                     const void** const DescriptorAddress)
 {
 	const uint8_t DescriptorType   = (wValue >> 8);
+	const uint8_t  DescriptorNumber = (wValue & 0xFF);
 
 	const void* Address = NULL;
 	uint16_t    Size    = NO_DESCRIPTOR;
@@ -180,8 +207,26 @@ uint16_t CALLBACK_USB_GetDescriptor(const uint16_t wValue,
 		Address = &HIDReport;
 		Size    = sizeof(HIDReport);
 	}
+    else if (DescriptorType == DTYPE_String) {
+        if (DescriptorNumber == STRING_ID_Language)
+        {
+            Address = &LanguageString;
+            Size    = LanguageString.Header.Size;
+        }
+        else if (DescriptorNumber == STRING_ID_Manufacturer)
+        {
+            Address = &ManufacturerString;
+            Size    = ManufacturerString.Header.Size;
+        }
+        else if (DescriptorNumber == STRING_ID_Product)
+        {
+            Address = &ProductString;
+            Size    = ProductString.Header.Size;
+        }
+
+    }
+
 
 	*DescriptorAddress = Address;
 	return Size;
 }
-
