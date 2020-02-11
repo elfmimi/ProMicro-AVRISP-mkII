@@ -36,7 +36,6 @@ CALC_ADDRESS_IN_HEX   = $(shell printf "0x%X" $$(( $(1) )) )
 BOOT_START_OFFSET     = $(call CALC_ADDRESS_IN_HEX, ($(FLASH_SIZE_KB) - $(BOOT_SECTION_SIZE_KB)) * 1024 )
 BOOT_SEC_OFFSET       = $(call CALC_ADDRESS_IN_HEX, ($(FLASH_SIZE_KB) * 1024) - ($(strip $(1))) )
 
-
 # Default target
 all:
 

@@ -85,13 +85,14 @@ int main(void)
 	GlobalInterruptEnable();
 
 	#if (BOARD == BOARD_QMK)
-	  USB_USBTask();			uint16_t keypress = 0;
+	  USB_USBTask();
+	  uint16_t keypress = 0;
 	#endif
 
 	while (RunBootloader) {
 		USB_USBTask();
 #if (BOARD == BOARD_QMK)
-        bool pressed = (PIN(QMK_ESC_INPUT) & NUM(QMK_ESC_INPUT));
+		bool pressed = (PIN(QMK_ESC_INPUT) & NUM(QMK_ESC_INPUT));
 		if ((keypress > 5000) && pressed) {
 			break;
 		}

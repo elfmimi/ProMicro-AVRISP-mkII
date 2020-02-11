@@ -223,9 +223,7 @@ uint16_t CALLBACK_USB_GetDescriptor(const uint16_t wValue,
             Address = &ProductString;
             Size    = ProductString.Header.Size;
         }
-
     }
-
 
 	*DescriptorAddress = Address;
 	return Size;
