@@ -39,10 +39,10 @@
 #include "Keyboard.h"
 
  #ifndef MANUFACTURER
-    #define MANUFACTURER QMK
+	#define MANUFACTURER QMK
 #endif
 #ifndef PRODUCT
-    #define PRODUCT Keyboard
+	#define PRODUCT Keyboard
 #endif
 
 /** HID class report descriptor. This is a special descriptor constructed with values from the
@@ -207,23 +207,23 @@ uint16_t CALLBACK_USB_GetDescriptor(const uint16_t wValue,
 		Address = &HIDReport;
 		Size    = sizeof(HIDReport);
 	}
-    else if (DescriptorType == DTYPE_String) {
-        if (DescriptorNumber == STRING_ID_Language)
-        {
-            Address = &LanguageString;
-            Size    = LanguageString.Header.Size;
-        }
-        else if (DescriptorNumber == STRING_ID_Manufacturer)
-        {
-            Address = &ManufacturerString;
-            Size    = ManufacturerString.Header.Size;
-        }
-        else if (DescriptorNumber == STRING_ID_Product)
-        {
-            Address = &ProductString;
-            Size    = ProductString.Header.Size;
-        }
-    }
+	else if (DescriptorType == DTYPE_String) {
+		if (DescriptorNumber == STRING_ID_Language)
+		{
+			Address = &LanguageString;
+			Size    = LanguageString.Header.Size;
+		}
+		else if (DescriptorNumber == STRING_ID_Manufacturer)
+		{
+			Address = &ManufacturerString;
+			Size    = ManufacturerString.Header.Size;
+		}
+		else if (DescriptorNumber == STRING_ID_Product)
+		{
+			Address = &ProductString;
+			Size    = ProductString.Header.Size;
+		}
+	}
 
 	*DescriptorAddress = Address;
 	return Size;

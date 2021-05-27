@@ -134,12 +134,12 @@ static void SetupHardware(void)
 	MCUCR = (1 << IVSEL);
 
 #if (BOARD == BOARD_QMK)
-    // output setup
-    DDR(QMK_ESC_OUTPUT) |= NUM(QMK_ESC_OUTPUT);
-    PORT(QMK_ESC_OUTPUT) |= NUM(QMK_ESC_OUTPUT);
+	// output setup
+	DDR(QMK_ESC_OUTPUT) |= NUM(QMK_ESC_OUTPUT);
+	PORT(QMK_ESC_OUTPUT) |= NUM(QMK_ESC_OUTPUT);
 
-    // input setup
-    DDR(QMK_ESC_INPUT) |= NUM(QMK_ESC_INPUT);
+	// input setup
+	DDR(QMK_ESC_INPUT) |= NUM(QMK_ESC_INPUT);
 #endif
 
 	/* Initialize USB subsystem */
