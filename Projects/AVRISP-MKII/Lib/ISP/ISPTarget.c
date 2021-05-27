@@ -1,13 +1,13 @@
 /*
              LUFA Library
-     Copyright (C) Dean Camera, 2019.
+     Copyright (C) Dean Camera, 2021.
 
   dean [at] fourwalledcubicle [dot] com
            www.lufa-lib.org
 */
 
 /*
-  Copyright 2019  Dean Camera (dean [at] fourwalledcubicle [dot] com)
+  Copyright 2021  Dean Camera (dean [at] fourwalledcubicle [dot] com)
 
   Permission to use, copy, modify, distribute, and sell this
   software and its documentation for any purpose is hereby granted
@@ -37,7 +37,7 @@
 
 #if defined(ENABLE_ISP_PROTOCOL) || defined(__DOXYGEN__)
 
-/** List of hardware SPI prescaler masks for possible AVRStudio ISP programming speeds.
+/** List of hardware SPI prescaler masks for possible Atmel Studio ISP programming speeds.
  *
  *  \hideinitializer
  */

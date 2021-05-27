@@ -11,6 +11,9 @@
  *  areas relevant to making older projects compatible with the API changes of each new release.
  *
  *  \section Sec_MigrationXXXXXX Version XXXXXX
+ *   No migration information.
+ *
+ *  \section Sec_Migration210130 Version 210130
  *  <b>Device Mode</b>
  *   - The \c DTYPE_CSInterface enum value has now been moved to the CDC and Audio drivers, as the constants \c CDC_DTYPE_CSInterface and \c AUDIO_DTYPE_CSInterface.
  *   - The \c DTYPE_CSEndpoint enum value has now been moved to the CDC and Audio drivers, as the constants \c CDC_DTYPE_CSEndpoint and \c AUDIO_DTYPE_CSEndpoint.

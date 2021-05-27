@@ -1,13 +1,13 @@
 /*
              LUFA Library
-     Copyright (C) Dean Camera, 2019.
+     Copyright (C) Dean Camera, 2021.
 
   dean [at] fourwalledcubicle [dot] com
            www.lufa-lib.org
 */
 
 /*
-  Copyright 2019  Dean Camera (dean [at] fourwalledcubicle [dot] com)
+  Copyright 2021  Dean Camera (dean [at] fourwalledcubicle [dot] com)
 
   Permission to use, copy, modify, distribute, and sell this
   software and its documentation for any purpose is hereby granted
@@ -59,7 +59,7 @@ void PRNT_Device_ProcessControlRequest(USB_ClassInfo_PRNT_Device_t* const PRNTIn
 				}
 
 				uint16_t IEEEStringLen = strlen(PRNTInterfaceInfo->Config.IEEE1284String);
-				Endpoint_Write_16_BE(IEEEStringLen);
+				Endpoint_Write_16_BE(IEEEStringLen + sizeof(uint16_t));
 				Endpoint_Write_Control_Stream_LE(PRNTInterfaceInfo->Config.IEEE1284String, IEEEStringLen);
 				Endpoint_ClearStatusStage();
 			}
@@ -77,6 +77,8 @@ void PRNT_Device_ProcessControlRequest(USB_ClassInfo_PRNT_Device_t* const PRNTIn
 				}
 
 				Endpoint_Write_8(PRNTInterfaceInfo->State.PortStatus);
+				Endpoint_ClearIN();
+
 				Endpoint_ClearStatusStage();
 			}
 

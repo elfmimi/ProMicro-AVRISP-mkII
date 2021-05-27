@@ -11,8 +11,5 @@
 *.class
 Documentation/
 node_modules/
-LUFA/StudioIntegration/ProjectGenerator/*
-LUFA/StudioIntegration/DocBook/*
-!LUFA/StudioIntegration/Docbook/mshelp/*
 Bootloaders/DFU/Keyboard.h
 .vscode/ipch/
