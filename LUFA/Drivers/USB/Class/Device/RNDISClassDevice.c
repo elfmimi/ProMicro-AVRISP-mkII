@@ -81,6 +81,9 @@ void RNDIS_Device_ProcessControlRequest(USB_ClassInfo_RNDIS_Device_t* const RNDI
 		case RNDIS_REQ_SendEncapsulatedCommand:
 			if (USB_ControlRequest.bmRequestType == (REQDIR_HOSTTODEVICE | REQTYPE_CLASS | REQREC_INTERFACE))
 			{
+				if (USB_ControlRequest.wLength >= sizeof(RNDISInterfaceInfo->Config.MessageBuffer))
+					break;
+
 				Endpoint_ClearSETUP();
 				Endpoint_Read_Control_Stream_LE(RNDISInterfaceInfo->Config.MessageBuffer, USB_ControlRequest.wLength);
 				Endpoint_ClearIN();
@@ -438,7 +441,8 @@ bool RNDIS_Device_IsPacketReceived(USB_ClassInfo_RNDIS_Device_t* const RNDISInte
 
 uint8_t RNDIS_Device_ReadPacket(USB_ClassInfo_RNDIS_Device_t* const RNDISInterfaceInfo,
                                 void* Buffer,
-                                uint16_t* const PacketLength)
+                                const uint16_t BufferSize,
+                                uint16_t* PacketLength)
 {
 	if ((USB_DeviceState != DEVICE_STATE_Configured) ||
 	    (RNDISInterfaceInfo->State.CurrRNDISState != RNDIS_Data_Initialized))
@@ -446,9 +450,9 @@ uint8_t RNDIS_Device_ReadPacket(USB_ClassInfo_RNDIS_Device_t* const RNDISInterfa
 		return ENDPOINT_RWSTREAM_DeviceDisconnected;
 	}
 
-	Endpoint_SelectEndpoint(RNDISInterfaceInfo->Config.DataOUTEndpoint.Address);
-
 	*PacketLength = 0;
+
+	Endpoint_SelectEndpoint(RNDISInterfaceInfo->Config.DataOUTEndpoint.Address);
 
 	if (!(Endpoint_IsOUTReceived()))
 		return ENDPOINT_RWSTREAM_NoError;
@@ -463,9 +467,16 @@ uint8_t RNDIS_Device_ReadPacket(USB_ClassInfo_RNDIS_Device_t* const RNDISInterfa
 		return RNDIS_ERROR_LOGICAL_CMD_FAILED;
 	}
 
-	*PacketLength = (uint16_t)le32_to_cpu(RNDISPacketHeader.DataLength);
+	const size_t ExpectedLength = (uint16_t)le32_to_cpu(RNDISPacketHeader.DataLength);
+
+	if (ExpectedLength > BufferSize)
+		*PacketLength = BufferSize;
+	else
+		*PacketLength = ExpectedLength;
 
 	Endpoint_Read_Stream_LE(Buffer, *PacketLength, NULL);
+	if (ExpectedLength > BufferSize)
+		Endpoint_Discard_Stream(ExpectedLength - BufferSize, NULL);
 	Endpoint_ClearOUT();
 
 	return ENDPOINT_RWSTREAM_NoError;
