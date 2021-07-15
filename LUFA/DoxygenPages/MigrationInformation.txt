@@ -12,6 +12,12 @@
  *
  *  \section Sec_MigrationXXXXXX Version XXXXXX
  *  <b>Device Mode</b>
+ *   - The \c RNDIS_Device_ReadPacket() function has an additional parameter that should be set to the destination buffer's length.
+ *  <b>Host Mode</b>
+ *   - The \c RNDIS_Host_ReadPacket() function has an additional parameter that should be set to the destination buffer's length.
+ *
+ *  \section Sec_Migration210130 Version 210130
+ *  <b>Device Mode</b>
  *   - The \c DTYPE_CSInterface enum value has now been moved to the CDC and Audio drivers, as the constants \c CDC_DTYPE_CSInterface and \c AUDIO_DTYPE_CSInterface.
  *   - The \c DTYPE_CSEndpoint enum value has now been moved to the CDC and Audio drivers, as the constants \c CDC_DTYPE_CSEndpoint and \c AUDIO_DTYPE_CSEndpoint.
  *

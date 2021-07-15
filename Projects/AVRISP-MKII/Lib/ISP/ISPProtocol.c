@@ -1,13 +1,13 @@
 /*
              LUFA Library
-     Copyright (C) Dean Camera, 2019.
+     Copyright (C) Dean Camera, 2021.
 
   dean [at] fourwalledcubicle [dot] com
            www.lufa-lib.org
 */
 
 /*
-  Copyright 2019  Dean Camera (dean [at] fourwalledcubicle [dot] com)
+  Copyright 2021  Dean Camera (dean [at] fourwalledcubicle [dot] com)
 
   Copyright 2019 Jacob September (jacobseptember [at] gmail [dot] com)
 
@@ -535,6 +535,12 @@ void ISPProtocol_SPIMulti(void)
 
     Endpoint_Read_Stream_LE(&SPI_Multi_Params, (sizeof(SPI_Multi_Params) - sizeof(SPI_Multi_Params.TxData)), NULL);
     Endpoint_Read_Stream_LE(&SPI_Multi_Params.TxData, SPI_Multi_Params.TxBytes, NULL);
+
+    if (SPI_Multi_Params.TxBytes >= sizeof(SPI_Multi_Params.TxData))
+    {
+        Endpoint_StallTransaction();
+        return;
+    }
 
     Endpoint_ClearOUT();
     Endpoint_SelectEndpoint(AVRISP_DATA_IN_EPADDR);

@@ -1,13 +1,13 @@
 /*
              LUFA Library
-     Copyright (C) Dean Camera, 2019.
+     Copyright (C) Dean Camera, 2021.
 
   dean [at] fourwalledcubicle [dot] com
            www.lufa-lib.org
 */
 
 /*
-  Copyright 2019  Dean Camera (dean [at] fourwalledcubicle [dot] com)
+  Copyright 2021  Dean Camera (dean [at] fourwalledcubicle [dot] com)
 
   Permission to use, copy, modify, distribute, and sell this
   software and its documentation for any purpose is hereby granted
@@ -43,18 +43,6 @@
 #ifndef _APP_CONFIG_H_
 #define _APP_CONFIG_H_
 
-	#define CLIENT_IP_ADDRESS                { 10,     0,    0,    1}
-	#define SERVER_IP_ADDRESS                { 10,     0,    0,    2}
-
 	#define ADAPTER_MAC_ADDRESS              {0x02, 0x00, 0x02, 0x00, 0x02, 0x00}
-	#define SERVER_MAC_ADDRESS               {0x00, 0x01, 0x00, 0x01, 0x00, 0x01}
-
-	#define NO_DECODE_ETHERNET
-	#define NO_DECODE_ARP
-	#define NO_DECODE_IP
-	#define NO_DECODE_ICMP
-	#define NO_DECODE_TCP
-	#define NO_DECODE_UDP
-	#define NO_DECODE_DHCP
 
 #endif

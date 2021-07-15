@@ -1,14 +1,14 @@
 /*
              LUFA Library
-     Copyright (C) Dean Camera, 2019.
+     Copyright (C) Dean Camera, 2021.
 
   dean [at] fourwalledcubicle [dot] com
            www.lufa-lib.org
 */
 
 /*
-  Copyright 2019  Dean Camera (dean [at] fourwalledcubicle [dot] com)
-  Copyright 2019  Filipe Rodrigues (filipepazrodrigues [at] gmail [dot] com)
+  Copyright 2021  Dean Camera (dean [at] fourwalledcubicle [dot] com)
+  Copyright 2021  Filipe Rodrigues (filipepazrodrigues [at] gmail [dot] com)
 
   Permission to use, copy, modify, distribute, and sell this
   software and its documentation for any purpose is hereby granted
@@ -249,7 +249,6 @@ void CCID_Device_USBTask(USB_ClassInfo_CCID_Device_t* const CCIDInterfaceInfo)
 				{
 					if (CCIDHeader.Length * sizeof(uint8_t) == sizeof(USB_CCID_ProtocolData_T0_t))
 					{
-
 						Endpoint_Read_Stream_LE(RequestBuffer, CCIDHeader.Length * sizeof(uint8_t), NULL);
 						Status = CALLBACK_CCID_SetParameters_T0(CCIDInterfaceInfo, CCIDHeader.Slot, &Error, (USB_CCID_ProtocolData_T0_t*) RequestBuffer);
 						if (CCID_CheckStatusNoError(Status))

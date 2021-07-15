@@ -1,13 +1,13 @@
 /*
              LUFA Library
-     Copyright (C) Dean Camera, 2019.
+     Copyright (C) Dean Camera, 2021.
 
   dean [at] fourwalledcubicle [dot] com
            www.lufa-lib.org
 */
 
 /*
-  Copyright 2019  Dean Camera (dean [at] fourwalledcubicle [dot] com)
+  Copyright 2021  Dean Camera (dean [at] fourwalledcubicle [dot] com)
 
   Permission to use, copy, modify, distribute, and sell this
   software and its documentation for any purpose is hereby granted
@@ -174,7 +174,7 @@ static void uIPManagement_ProcessIncomingPacket(void)
 		LEDs_SetAllLEDs(LEDMASK_USB_BUSY);
 
 		/* Read the Incoming packet straight into the UIP packet buffer */
-		RNDIS_Device_ReadPacket(&Ethernet_RNDIS_Interface_Device, uip_buf, &uip_len);
+		RNDIS_Device_ReadPacket(&Ethernet_RNDIS_Interface_Device, uip_buf, UIP_BUFSIZE, &uip_len);
 	}
 	else
 	{
@@ -185,7 +185,7 @@ static void uIPManagement_ProcessIncomingPacket(void)
 		LEDs_SetAllLEDs(LEDMASK_USB_BUSY);
 
 		/* Read the Incoming packet straight into the UIP packet buffer */
-		RNDIS_Host_ReadPacket(&Ethernet_RNDIS_Interface_Host, uip_buf, &uip_len);
+		RNDIS_Host_ReadPacket(&Ethernet_RNDIS_Interface_Host, uip_buf, UIP_BUFSIZE, &uip_len);
 	}
 
 	/* If the packet contains an Ethernet frame, process it */

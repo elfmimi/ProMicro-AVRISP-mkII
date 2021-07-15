@@ -1,13 +1,13 @@
 /*
              LUFA Library
-     Copyright (C) Dean Camera, 2019.
+     Copyright (C) Dean Camera, 2021.
 
   dean [at] fourwalledcubicle [dot] com
            www.lufa-lib.org
 */
 
 /*
-  Copyright 2019  Dean Camera (dean [at] fourwalledcubicle [dot] com)
+  Copyright 2021  Dean Camera (dean [at] fourwalledcubicle [dot] com)
 
   Permission to use, copy, modify, distribute, and sell this
   software and its documentation for any purpose is hereby granted
@@ -201,14 +201,16 @@
 			 *
 			 *  \param[in,out] RNDISInterfaceInfo  Pointer to a structure containing an RNDIS Class host configuration and state.
 			 *  \param[out]    Buffer              Pointer to a buffer where the packer data is to be written to.
+       *  \param[in]     BufferSize          Size in bytes of the supplied buffer to store the read packet.
 			 *  \param[out]    PacketLength        Pointer to where the length in bytes of the read packet is to be stored.
 			 *
 			 *  \return A value from the \ref Pipe_Stream_RW_ErrorCodes_t enum.
 			 */
 			uint8_t RNDIS_Host_ReadPacket(USB_ClassInfo_RNDIS_Host_t* const RNDISInterfaceInfo,
 			                              void* Buffer,
+			                              const uint16_t BufferSize,
 			                              uint16_t* const PacketLength) ATTR_NON_NULL_PTR_ARG(1) ATTR_NON_NULL_PTR_ARG(2)
-			                              ATTR_NON_NULL_PTR_ARG(3);
+			                              ATTR_NON_NULL_PTR_ARG(4);
 
 			/** Sends the given packet to the attached RNDIS device, after adding a RNDIS packet message header.
 			 *

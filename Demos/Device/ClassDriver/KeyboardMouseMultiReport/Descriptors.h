@@ -1,13 +1,13 @@
 /*
              LUFA Library
-     Copyright (C) Dean Camera, 2019.
+     Copyright (C) Dean Camera, 2021.
 
   dean [at] fourwalledcubicle [dot] com
            www.lufa-lib.org
 */
 
 /*
-  Copyright 2019  Dean Camera (dean [at] fourwalledcubicle [dot] com)
+  Copyright 2021  Dean Camera (dean [at] fourwalledcubicle [dot] com)
 
   Permission to use, copy, modify, distribute, and sell this
   software and its documentation for any purpose is hereby granted
@@ -85,11 +85,11 @@
 
 	/* Enums: */
 		/** Enum for the HID report IDs used in the device. */
-		enum
+		enum HID_ReportID_t
 		{
 			HID_REPORTID_MouseReport    = 0x01, /**< Report ID for the Mouse report within the device. */
 			HID_REPORTID_KeyboardReport = 0x02, /**< Report ID for the Keyboard report within the device. */
-		} HID_Report_IDs;
+		};
 
 	/* Function Prototypes: */
 		uint16_t CALLBACK_USB_GetDescriptor(const uint16_t wValue,

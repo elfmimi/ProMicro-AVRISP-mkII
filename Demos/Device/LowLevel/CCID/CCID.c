@@ -1,14 +1,14 @@
 /*
              LUFA Library
-     Copyright (C) Dean Camera, 2019.
+     Copyright (C) Dean Camera, 2021.
 
   dean [at] fourwalledcubicle [dot] com
            www.lufa-lib.org
 */
 
 /*
-  Copyright 2019  Dean Camera (dean [at] fourwalledcubicle [dot] com)
-  Copyright 2019  Filipe Rodrigues (filipepazrodrigues [at] gmail [dot] com)
+  Copyright 2021  Dean Camera (dean [at] fourwalledcubicle [dot] com)
+  Copyright 2021  Filipe Rodrigues (filipepazrodrigues [at] gmail [dot] com)
 
   Permission to use, copy, modify, distribute, and sell this
   software and its documentation for any purpose is hereby granted
@@ -562,6 +562,9 @@ void CCID_Task(void)
 
 				(void)Bwi;
 				(void)LevelParameter;
+
+				if (CCIDHeader.Length * sizeof(uint8_t) > sizeof(RequestBuffer))
+					break;
 
 				Endpoint_Read_Stream_LE(RequestBuffer, CCIDHeader.Length * sizeof(uint8_t), NULL);
 

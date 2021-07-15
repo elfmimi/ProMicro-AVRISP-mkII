@@ -1,13 +1,13 @@
 /*
              LUFA Library
-     Copyright (C) Dean Camera, 2019.
+     Copyright (C) Dean Camera, 2021.
 
   dean [at] fourwalledcubicle [dot] com
            www.lufa-lib.org
 */
 
 /*
-  Copyright 2019  Dean Camera (dean [at] fourwalledcubicle [dot] com)
+  Copyright 2021  Dean Camera (dean [at] fourwalledcubicle [dot] com)
 
   Permission to use, copy, modify, distribute, and sell this
   software and its documentation for any purpose is hereby granted
@@ -101,7 +101,7 @@ void RNDISHost_Task(void)
 		LEDs_SetAllLEDs(LEDMASK_USB_BUSY);
 
 		uint16_t PacketLength;
-		RNDIS_Host_ReadPacket(&Ethernet_RNDIS_Interface, &PacketBuffer, &PacketLength);
+		RNDIS_Host_ReadPacket(&Ethernet_RNDIS_Interface, PacketBuffer, sizeof(PacketBuffer), &PacketLength);
 
 		printf_P(PSTR("***PACKET (Size %d)***\r\n"), PacketLength);
 

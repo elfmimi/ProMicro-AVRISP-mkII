@@ -1,13 +1,13 @@
 /*
              LUFA Library
-     Copyright (C) Dean Camera, 2019.
+     Copyright (C) Dean Camera, 2021.
 
   dean [at] fourwalledcubicle [dot] com
            www.lufa-lib.org
 */
 
 /*
-  Copyright 2019  Dean Camera (dean [at] fourwalledcubicle [dot] com)
+  Copyright 2021  Dean Camera (dean [at] fourwalledcubicle [dot] com)
 
   Permission to use, copy, modify, distribute, and sell this
   software and its documentation for any purpose is hereby granted
@@ -475,8 +475,8 @@ static void CDC_Task(void)
 	else if (Command == AVR109_COMMAND_SetCurrentAddress)
 	{
 		/* Set the current address to that given by the host (translate 16-bit word address to byte address) */
-		CurrAddress   = (FetchNextCommandByte() << 9);
-		CurrAddress  |= (FetchNextCommandByte() << 1);
+		CurrAddress   = ((uint32_t)FetchNextCommandByte() << 9);
+		CurrAddress  |= ((uint32_t)FetchNextCommandByte() << 1);
 
 		/* Send confirmation byte back to the host */
 		WriteNextResponseByte('\r');
