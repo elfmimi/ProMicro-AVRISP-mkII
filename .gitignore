@@ -12,4 +12,6 @@
 Documentation/
 node_modules/
 Bootloaders/DFU/Keyboard.h
+Bootloaders/HID/Keyboard.h
 .vscode/ipch/
+.DS_Store
