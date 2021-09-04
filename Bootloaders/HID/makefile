@@ -27,8 +27,8 @@ LTO          = Y
 # Flash size and bootloader section sizes of the target, in KB. These must
 # match the target's total FLASH size and the bootloader size set in the
 # device's fuses.
-FLASH_SIZE_KB         ?= 32
-BOOT_SECTION_SIZE_KB  ?= 4
+FLASH_SIZE_KB        ?= 32
+BOOT_SECTION_SIZE_KB ?= 4
 
 # Bootloader address calculation formulas
 # Do not modify these macros, but rather modify the dependent values above.

@@ -137,7 +137,7 @@ void Application_Jump_Check(void)
 		{
 			/* If the reset source was not an external reset or the key is correct, clear it and jump to the application */
 			if (!(MCUSR & (1 << EXTRF)) || (MagicBootKey == MAGIC_BOOT_KEY))
-			 JumpToApplication = true;
+			  JumpToApplication = true;
 
 			/* Clear reset source */
 			MCUSR &= ~(1 << EXTRF);
@@ -186,7 +186,6 @@ int main(void)
 
 	/* Enable global interrupts so that the USB stack can function */
 	GlobalInterruptEnable();
-
 
 	#if (BOARD == BOARD_QMK)
 		uint16_t keypress = 0;
@@ -249,8 +248,7 @@ static void SetupHardware(void)
 	/* Bootloader active LED toggle timer initialization */
 	TIMSK1 = (1 << TOIE1);
 	TCCR1B = ((1 << CS11) | (1 << CS10));
-
-}	
+}
 
 /** Resets all configured hardware required for the bootloader back to their original states. */
 static void ResetHardware(void)

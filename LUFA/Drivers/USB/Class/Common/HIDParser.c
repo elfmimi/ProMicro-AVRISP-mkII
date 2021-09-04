@@ -386,3 +386,4 @@ uint16_t USB_GetHIDReportSize(HID_ReportInfo_t* const ParserData,
 
 	return 0;
 }
+
