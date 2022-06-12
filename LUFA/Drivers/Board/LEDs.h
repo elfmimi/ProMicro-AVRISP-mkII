@@ -132,7 +132,8 @@
 			#include "AVR8/BUMBLEB/LEDs.h"
 		#elif (BOARD == BOARD_EVK527)
 			#include "AVR8/EVK527/LEDs.h"
-		#elif ((BOARD == BOARD_TEENSY) || (BOARD == BOARD_TEENSY2))
+		#elif ((BOARD == BOARD_TEENSY) || (BOARD == BOARD_TEENSYPP)) || \
+		      ((BOARD == BOARD_TEENSY2) || (BOARD == BOARD_TEENSY2PP))
 			#include "AVR8/TEENSY/LEDs.h"
 		#elif ((BOARD == BOARD_QMK))
 			#include "AVR8/QMK/LEDs.h"
