@@ -96,5 +96,8 @@
 		                              const void** const DescriptorAddress)
 		                              ATTR_WARN_UNUSED_RESULT ATTR_NON_NULL_PTR_ARG(3);
 
+		uint16_t AVRISP_VendorRequest(const void** const DescriptorAddress)
+		                              ATTR_WARN_UNUSED_RESULT ATTR_NON_NULL_PTR_ARG(1);
+
 #endif
 

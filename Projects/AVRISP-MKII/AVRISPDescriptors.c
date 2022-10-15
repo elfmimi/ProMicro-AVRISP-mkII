@@ -46,7 +46,7 @@ const USB_Descriptor_Device_t PROGMEM AVRISP_DeviceDescriptor =
 {
 	.Header                 = {.Size = sizeof(USB_Descriptor_Device_t), .Type = DTYPE_Device},
 
-	.USBSpecification       = VERSION_BCD(1,1,0),
+	.USBSpecification       = VERSION_BCD(2,1,0),
 	.Class                  = USB_CSCP_VendorSpecificClass,
 	.SubClass               = USB_CSCP_NoDeviceSubclass,
 	.Protocol               = USB_CSCP_NoDeviceProtocol,
@@ -148,6 +148,55 @@ const USB_Descriptor_String_t PROGMEM AVRISP_SerialString = USB_STRING_DESCRIPTO
     // Note: Real AVRISP-MKII has the embedded NUL byte, bug in firmware?
 );
 
+#define VENDOR_MS_OS_20_REQUEST 0xC1
+const uint8_t PROGMEM bos_desc[] = {
+    0x05,
+    0x0F,
+    0x05 + 0x1C, // LSB of sizeof(bos_desc)
+    0, // MSB of sizeof(bos_desc)
+    0x01,
+
+    0x1C,
+    0x10,
+    0x05,
+    0x00,
+    0xDF,
+    0x60,
+    0xDD,
+    0xD8,
+    0x89,
+    0x45,
+    0xC7,
+    0x4C,
+    0x9C,
+    0xD2,
+    0x65,
+    0x9D,
+    0x9E,
+    0x64,
+    0x8A,
+    0x9F,
+    0x00,
+    0x00,
+    0x03,
+    0x06,
+    0x0A + 0x14, // LSB of sizeof(msos20_desc)
+    0, // MSB of sizeof(msos20_desc)
+    VENDOR_MS_OS_20_REQUEST,
+    0x00,
+};
+
+// MS OS 2.0 ( Microsoft OS 2.0 Descriptors )
+const uint8_t PROGMEM msos20_desc[] = {
+    0x0A, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x03, 0x06,
+    0x0A + 0x14, // LSB of sizeof(msos20_desc)
+    0, // MSB of sizeof(msos20_desc)
+    0x14, 0x00, 0x03, 0x00,
+    'W', 'I', 'N', 'U', 'S', 'B', 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+};
+
 /** This function is called by the library when in device mode, and must be overridden (see library "USB Descriptors"
  *  documentation) by the application code so that the address and size of a requested descriptor can be given
  *  to the USB library. When the device receives a Get Descriptor request on the control endpoint, this function
@@ -194,10 +243,64 @@ uint16_t AVRISP_GetDescriptor(const uint16_t wValue,
 					Size    = AVRISP_SerialString.Header.Size;
 					break;
 			}
-
+			break;
+		case /* DTYPE_BinaryObjectStore */ 0x0F:
+			Address = bos_desc;
+			Size = sizeof(bos_desc);
 			break;
 	}
 
 	*DescriptorAddress = Address;
 	return Size;
+}
+
+uint16_t AVRISP_VendorRequest(const void** const DescriptorAddress)
+{
+	// const uint8_t  bmRequestType = USB_ControlRequest.bmRequestType;
+	const uint8_t  bRequest = USB_ControlRequest.bRequest;
+	// const uint8_t  DescriptorType   = (wValue >> 8);
+	// const uint8_t  DescriptorNumber = (wValue & 0xFF);
+
+	const void* Address = NULL;
+	uint16_t    Size    = NO_DESCRIPTOR;
+
+	switch (bRequest)
+	{
+		case VENDOR_MS_OS_20_REQUEST:
+			if(USB_ControlRequest.wIndex == 7 /* MS_OS_20_DESCRIPTOR_INDEX */) {
+				Address = msos20_desc;
+				Size    = sizeof(msos20_desc);
+			}
+			break;
+	}
+
+	*DescriptorAddress = Address;
+	return Size;
+}
+
+/** Event handler for the library USB Control Request reception event. */
+void EVENT_USB_Device_ControlRequest(void)
+{
+	const uint8_t  bmRequestType = USB_ControlRequest.bmRequestType;
+	// const uint8_t  bRequest = USB_ControlRequest.bRequest;
+
+	const void* DescriptorPointer;
+	uint16_t    DescriptorSize;
+
+	if (bmRequestType != (REQDIR_DEVICETOHOST | REQTYPE_VENDOR | REQREC_DEVICE))
+	{
+		return;
+	}
+
+	if ((DescriptorSize = AVRISP_VendorRequest(&DescriptorPointer)) == NO_DESCRIPTOR)
+	{
+		return;
+	}
+
+	Endpoint_ClearSETUP();
+
+	// We put our MSOS2.0 Descriptors in PROGMEM.
+	Endpoint_Write_Control_PStream_LE(DescriptorPointer, DescriptorSize);
+
+	Endpoint_ClearOUT();
 }
