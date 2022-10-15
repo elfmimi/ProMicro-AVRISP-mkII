@@ -89,6 +89,7 @@ static const uint16_t TimerCompareFromSCKDuration[] PROGMEM =
 	ISP_TIMER_COMP(1956),  ISP_TIMER_COMP(1866),  ISP_TIMER_COMP(1779),  ISP_TIMER_COMP(1695),  ISP_TIMER_COMP(1615),
 	ISP_TIMER_COMP(1539),  ISP_TIMER_COMP(1468),  ISP_TIMER_COMP(1398),  ISP_TIMER_COMP(1333),  ISP_TIMER_COMP(1271),
 	ISP_TIMER_COMP(1212),  ISP_TIMER_COMP(1155),  ISP_TIMER_COMP(1101),  ISP_TIMER_COMP(1049),  ISP_TIMER_COMP(1000),
+	/*
 	ISP_TIMER_COMP(953),   ISP_TIMER_COMP(909),   ISP_TIMER_COMP(866),   ISP_TIMER_COMP(826),   ISP_TIMER_COMP(787),
 	ISP_TIMER_COMP(750),   ISP_TIMER_COMP(715),   ISP_TIMER_COMP(682),   ISP_TIMER_COMP(650),   ISP_TIMER_COMP(619),
 	ISP_TIMER_COMP(590),   ISP_TIMER_COMP(563),   ISP_TIMER_COMP(536),   ISP_TIMER_COMP(511),   ISP_TIMER_COMP(487),
@@ -102,6 +103,7 @@ static const uint16_t TimerCompareFromSCKDuration[] PROGMEM =
 	ISP_TIMER_COMP(86.6),  ISP_TIMER_COMP(82.6),  ISP_TIMER_COMP(78.7),  ISP_TIMER_COMP(75.0),  ISP_TIMER_COMP(71.5),
 	ISP_TIMER_COMP(68.2),  ISP_TIMER_COMP(65.0),  ISP_TIMER_COMP(61.9),  ISP_TIMER_COMP(59.0),  ISP_TIMER_COMP(56.3),
 	ISP_TIMER_COMP(53.6),  ISP_TIMER_COMP(51.1)
+	*/
 };
 
 /** Currently selected SPI driver, either hardware (for fast ISP speeds) or software (for slower ISP speeds). */
@@ -225,8 +227,11 @@ void ISPTarget_ConfigureRescueClock(void)
  *
  *  \param[in] SCKDuration  Duration of the desired software ISP SCK clock
  */
-void ISPTarget_ConfigureSoftwareSPI(const uint8_t SCKDuration)
+void ISPTarget_ConfigureSoftwareSPI(uint8_t SCKDuration)
 {
+	/* Limit minimum clock to 1kHz */
+	if (SCKDuration >= (sizeof(SPIMaskFromSCKDuration) + sizeof(TimerCompareFromSCKDuration)/sizeof(uint16_t)))
+	  SCKDuration = sizeof(SPIMaskFromSCKDuration) + sizeof(TimerCompareFromSCKDuration)/sizeof(uint16_t) - 1;
 	/* Configure Timer 1 for software SPI using the specified SCK duration */
 	TIMSK1 = (1 << OCIE1A);
 	TCNT1  = 0;
