@@ -78,6 +78,10 @@ void SetupHardware(void)
 	MCUSR &= ~(1 << WDRF);
 	wdt_disable();
 
+	// disable jtag and yield up F4 - F7 for GPIO
+	MCUCR |= _BV(JTD);
+	MCUCR |= _BV(JTD);
+
 	/* Disable clock division */
 	clock_prescale_set(clock_div_1);
 #endif
