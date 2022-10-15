@@ -43,6 +43,11 @@
 #ifndef _APP_CONFIG_H_
 #define _APP_CONFIG_H_
 
+	#define RESET_LINE_PORT            PORTF
+	#define RESET_LINE_PIN             PINF
+	#define RESET_LINE_DDR             DDRF
+	#define RESET_LINE_MASK            (1 << 4)
+
 	#define AUX_LINE_PORT              PORTB
 	#define AUX_LINE_PIN               PINB
 	#define AUX_LINE_DDR               DDRB
@@ -51,6 +56,11 @@
 	#else
 		#define AUX_LINE_MASK          (1 << 4)
 	#endif
+
+	#define AUX2_LINE_PORT             PORTB
+	#define AUX2_LINE_PIN              PINB
+	#define AUX2_LINE_DDR              DDRB
+	#define AUX2_LINE_MASK             (1 << 6)
 
 	#define ENABLE_ISP_PROTOCOL
 	#define ENABLE_XPROG_PROTOCOL

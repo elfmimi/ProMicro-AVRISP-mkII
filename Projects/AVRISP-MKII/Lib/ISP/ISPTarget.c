@@ -274,17 +274,55 @@ void ISPTarget_ChangeTargetResetLine(const bool ResetTarget)
 {
 	if (ResetTarget)
 	{
-		AUX_LINE_DDR |= AUX_LINE_MASK;
+#ifdef RESET_LINE_PORT
+		RESET_LINE_DDR  |= RESET_LINE_MASK;
+#endif
+#ifdef AUX_LINE_PORT
+		AUX_LINE_DDR  |= AUX_LINE_MASK;
+#endif
+#ifdef AUX2_LINE_PORT
+		AUX2_LINE_DDR  |= AUX2_LINE_MASK;
+#endif
 
 		if (!(V2Params_GetParameterValue(PARAM_RESET_POLARITY)))
+		{
+#ifdef RESET_LINE_PORT
+		  RESET_LINE_PORT |=  RESET_LINE_MASK;
+#endif
+#ifdef AUX_LINE_PORT
 		  AUX_LINE_PORT |=  AUX_LINE_MASK;
+#endif
+#ifdef AUX2_LINE_PORT
+		  AUX2_LINE_PORT |=  AUX2_LINE_MASK;
+#endif
+		}
 		else
+		{
+#ifdef RESET_LINE_PORT
+		  RESET_LINE_PORT &= ~RESET_LINE_MASK;
+#endif
+#ifdef AUX_LINE_PORT
 		  AUX_LINE_PORT &= ~AUX_LINE_MASK;
+#endif
+#ifdef AUX2_LINE_PORT
+		  AUX2_LINE_PORT &= ~AUX2_LINE_MASK;
+#endif
+		}
 	}
 	else
 	{
+#ifdef RESET_LINE_PORT
+		RESET_LINE_DDR  &= ~RESET_LINE_MASK;
+		RESET_LINE_PORT &= ~RESET_LINE_MASK;
+#endif
+#ifdef AUX_LINE_PORT
 		AUX_LINE_DDR  &= ~AUX_LINE_MASK;
 		AUX_LINE_PORT &= ~AUX_LINE_MASK;
+#endif
+#ifdef AUX2_LINE_PORT
+		AUX2_LINE_DDR  &= ~AUX2_LINE_MASK;
+		AUX2_LINE_PORT &= ~AUX2_LINE_MASK;
+#endif
 	}
 }
 
