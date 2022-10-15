@@ -219,6 +219,16 @@ void ISPTarget_ConfigureRescueClock(void)
 		OCR1A  = ((F_CPU / 2 / ISP_RESCUE_CLOCK_SPEED) - 1);
 		TCCR1A = (1 << COM1A0);
 		TCCR1B = ((1 << WGM12) | (1 << CS10));
+
+		#if defined(USB_SERIES_4_AVR)
+		/* Start Timer 3 to generate a 4MHz clock on the OCR3A pin */
+		DDRC  |= (1 << 6);
+		TIMSK3 = 0;
+		TCNT3  = 0;
+		OCR3A  = ((F_CPU / 2 / ISP_RESCUE_CLOCK_SPEED) - 1);
+		TCCR3A = (1 << COM3A0);
+		TCCR3B = ((1 << WGM32) | (1 << CS30));
+		#endif
 	#endif
 }
 
